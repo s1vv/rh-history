@@ -7,6 +7,7 @@ edition = "2024"
 opt-level = "z"  # Оптимизация для уменьшения размера
 lto = true       # Link Time Optimization (оптимизация на этапе линковки)
 codegen-units = 1  # Объединение единиц кода для улучшения оптимизации
+strip = "symbols"
 
 [dependencies]
 dirs = "6.0.0"
