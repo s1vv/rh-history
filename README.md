@@ -1,33 +1,34 @@
 # rh-history
 
-📜 Запуск в терминале ранее использованных команд, расширенный Reverse-i-search.
+📜 Terminal command launcher with directory context — an enhanced Reverse-i-search.
 
-Сохраняет директорию вызова и саму команду в отдельный лог-файл `~/.rh_history`, позволяя позже интерактивно искать, фильтровать и повторно выполнять команды через `rh`.
-Если открывали файл для редактирования через файловый менеджер mc (mcedit) - можно повторить эту команду через `rh` и файл будет открыт в nano.
+It saves each executed command along with the working directory to a log file `~/.rh_history`. Later, you can interactively filter, search, and re-run those commands via `rh`.
+
+For example, if you opened a file in `mcedit` (via Midnight Commander), you can later re-launch it with `nano` directly from history.
 
 ![rh](./rh.gif)
 
 ---
 
-## Возможности
+## Features
 
-* Запись каждой команды с контекстом (рабочей директорией).
-* Фильтрация лишних команд (например, `cd`, `clear`, `history` и др.).
-* Интерактивный выбор и повтор команды через [skim](https://github.com/lotabout/skim).
-* Минималистичная интеграция с shell'ом: `bash`, `zsh`.
+* Logs every command with the working directory.
+* Filters out unimportant commands (`cd`, `clear`, `exit`, etc.).
+* Interactive fuzzy search via [skim](https://github.com/lotabout/skim).
+* Seamless shell integration (`bash`, `zsh`).
 
 ---
 
-## Описание компонентов
+## Components Overview
 
-### `mcedit` (в `bin/`)
+### `mcedit` (in `bin/`)
 
-Скрипт-обертка для редактора `nano`. Его задача:
+A wrapper around the `nano` editor that:
 
-* зафиксировать вызов редактора в истории (`~/.rh_history`);
-* затем запустить настоящий редактор (проверте соответствие пути в ~/bin/mcedit с фактическим).
+* Logs the editor invocation via `rh-log.sh`;
+* Then launches the actual editor (`nano` by default — check path in `~/bin/mcedit`).
 
-Используется как редактор по умолчанию (`$EDITOR`).
+Used as the default `$EDITOR`.
 
 ```bash
 #!/bin/bash
@@ -37,36 +38,38 @@ exec /usr/bin/nano "$@"
 
 ---
 
-### `rh-log.sh` (в `bin/`)
+### `rh-log.sh` (in `bin/`)
 
-Минималистичный `bash`-логгер, вызываемый через `PROMPT_COMMAND`:
+A minimal `bash` logger, used via `PROMPT_COMMAND`.
 
-* удаляет лишние пробелы;
-* отфильтровывает команды по списку (`cd`, `clear`, `exit`, `history`, и др.);
-* записывает команду и текущую директорию в `~/.rh_history`.
-
----
-
-### `rh` (бинарь)
-
-Интерактивная утилита на Rust с использованием `skim`.
-
-Позволяет:
-
-* открыть историю команд;
-* выбрать нужную команду;
-* исполнение ее в той директории где она вызывалась.
+* Trims leading/trailing spaces;
+* Filters out commands like `cd`, `clear`, `history`, `exit`, etc.;
+* Appends command + working directory to `~/.rh_history`.
 
 ---
 
-## Установка
+### `rh` (binary)
 
-### 1. Установите зависимости:
+A command-line utility written in Rust using [`skim`](https://github.com/lotabout/skim).
 
-* Rust (`cargo`, `rustc`)
-* [skim](https://github.com/lotabout/skim) (используется утилитой `rh`)
+Allows:
 
-### 2. Выполните скрипт установки:
+* Browsing your logged command history;
+* Selecting a command to execute;
+* Re-executing it in the original directory.
+
+---
+
+## Installation
+
+### 1. Requirements
+
+* [Rust toolchain](https://rustup.rs/)
+* [skim](https://github.com/lotabout/skim)
+
+---
+
+### 2. Run the installer:
 
 ```bash
 git clone https://github.com/s1vv/rh-history.git
@@ -74,10 +77,10 @@ cd rh-history
 ./install.sh
 ```
 
-Скрипт:
+The script:
 
-* копирует `mcedit`, `rh-log.sh`, `rh` в `~/bin`;
-* добавляет в `~/.bashrc` (или `~/.zshrc`) нужные переменные:
+* Copies `mcedit`, `rh-log.sh`, `rh` to `~/bin`;
+* Updates `~/.bashrc` or `~/.zshrc` with:
 
 ```bash
 export PATH="$HOME/bin:$PATH"
@@ -87,17 +90,17 @@ export PROMPT_COMMAND='history -a; rh-log.sh "$(fc -ln -1)"'
 
 ---
 
-## Использование
+## Usage
 
-1. **Работайте в терминале как обычно.**
-2. **Ваша история команд автоматически логируется.**
-3. **Для поиска команды:**
+1. **Use your shell as usual.**
+2. **Your command history gets logged automatically.**
+3. **To search and run a past command:**
 
 ```bash
 rh
 ```
 
-Вы увидите интерактивный список — выберите нужную, и она будет выполнена.
+An interactive fuzzy menu opens. Select the command — it will be executed in its original directory.
 
 ---
 
@@ -105,7 +108,7 @@ rh
 rh -h
 ```
 
-Выводит в консоль 9 последних команд.
+Displays the last 9 logged commands.
 
 ---
 
@@ -113,19 +116,26 @@ rh -h
 rh -r 4
 ```
 
-Будет выполнена команда под номером 4.
+Replays command #4 from the history.
 
 ---
 
-## Советы
+## Tips
 
-* Убедитесь, что `~/bin` в вашем `$PATH`.
-* Если используете другой редактор, замените `nano` в `mcedit`.
+* Make sure `~/bin` is in your `$PATH`.
+* If you prefer another editor, edit `mcedit` to use it instead of `nano`.
 
 ---
 
-## Лицензия
+## License
 
-MIT — свободное использование и распространение. См. файл `LICENSE`.
+MIT — feel free to use, modify, and redistribute. See `LICENSE`.
+
+---
+
+## Other languages
+
+🌐 Looking for the Russian version?
+Check the [`ru-lang` branch](https://github.com/s1vv/rh-history/tree/ru-lang)
 
 ---

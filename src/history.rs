@@ -35,7 +35,7 @@ pub fn read_history_unique() -> Vec<String> {
     let mut seen = HashSet::new();
     let mut unique = Vec::new();
 
-    // читаем и собираем уникальные строки, сохраняя только последние N
+    // read and collect unique strings, saving only the last N
     for line in lines.into_iter().rev() {
         if seen.insert(line.clone()) {
             unique.push(line);
@@ -45,9 +45,9 @@ pub fn read_history_unique() -> Vec<String> {
         }
     }
 
-    unique.reverse(); // чтобы вернуть в хронологическом порядке
+    unique.reverse(); // to return in chronological order
 
-    // обновляем файл, если удалось прочитать хоть что-то
+    // we update the file if we have managed to read at least something
     if !unique.is_empty() {
         if let Ok(mut file) = OpenOptions::new().write(true).truncate(true).open(&path) {
             for line in &unique {
@@ -83,19 +83,18 @@ pub fn interactive_select() {
 
     if let Some(out) = output {
         if out.is_abort {
-            // Пользователь нажал Ctrl+C или Esc — выходим без выполнения
-            println!("❌ Отмена выбора команды");
+            println!("❌ Canceling command selection");
             return;
         }
 
         if let Some(selected) = out.selected_items.first() {
             if let Some((cwd, cmd)) = selected.output().split_once('\t') {
                 if let Err(e) = std::env::set_current_dir(cwd.trim()) {
-                    eprintln!("❗Не удалось перейти в директорию {}: {}", cwd, e);
+                    eprintln!("❗Couldn't navigate to the directory {}: {}", cwd, e);
                     return;
                 }
 
-                println!("🚀 Выполняем: {}", cmd);
+                println!("🚀 Done: {}", cmd);
                 run_raw_command(cmd.trim());
             }
         }

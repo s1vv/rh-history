@@ -1,33 +1,33 @@
 #!/bin/bash
 set -e
 
-# Перейти в директорию скрипта
+# Go to the script directory
 cd "$(dirname "$0")"
 
-# Файлы для установки
+# Installation files
 FILES=("rh" "mcedit" "rh-log.sh")
 
-# Локальная установка для текущего пользователя
+# Local installation for the current user
 USER_BIN="$HOME/bin"
 mkdir -p "$USER_BIN"
-echo "[+] Копируем исполняемые файлы в $USER_BIN"
+echo "[+] Copying the executable files to $USER_BIN"
 
 for file in "${FILES[@]}"; do
     cp "bin/$file" "$USER_BIN"
     chmod +x "$USER_BIN/$file"
 done
 
-# Обновление .bashrc пользователя
+# Update the user's .bashrc
 RC_FILE="$HOME/.bashrc"
 
-echo "[+] Обновляем $RC_FILE при необходимости"
+echo "[+] Update $RC_FILE if necessary"
 grep -qxF 'export PATH="$HOME/bin:$PATH"' "$RC_FILE" || echo 'export PATH="$HOME/bin:$PATH"' >> "$RC_FILE"
 grep -qxF 'export EDITOR=mcedit' "$RC_FILE" || echo 'export EDITOR=mcedit' >> "$RC_FILE"
 grep -qxF 'export PROMPT_COMMAND='"'"'history -a; rh-log.sh "$(fc -ln -1)"'"'" "$RC_FILE" || echo 'export PROMPT_COMMAND='"'"'history -a; rh-log.sh "$(fc -ln -1)"'"'" >> "$RC_FILE"
 
-# Установка для root (если есть доступ)
+# Installation for root (if available)
 if command -v sudo &>/dev/null; then
-    echo "[?] Установить утилиты и для root в /usr/local/bin? (y/n)"
+    echo "[?] Should install utilities for root in /usr/local/bin? (y/n)"
     read -r install_root
 
     if [[ "$install_root" == "y" ]]; then
@@ -38,7 +38,7 @@ if command -v sudo &>/dev/null; then
 
         echo "[+] Файлы установлены в /usr/local/bin"
 
-        # Добавление в /root/.bashrc через heredoc
+        # Adding to /root/.bashrc via heredoc
         sudo bash <<'EOF'
 RC_FILE="/root/.bashrc"
 
@@ -48,9 +48,9 @@ PROMPT_LINE='export PROMPT_COMMAND='\''history -a; rh-log.sh "$(fc -ln -1)"'\'''
 grep -qxF "$PROMPT_LINE" "$RC_FILE" || echo "$PROMPT_LINE" >> "$RC_FILE"
 EOF
 
-        echo "[+] Настройки добавлены в /root/.bashrc"
+        echo "[+] Settings added to /root/.bashrc"
     fi
 fi
 
-echo "[✓] Установка завершена."
-echo "→ Перезапустите терминал или выполните: source ~/.bashrc"
+echo "[✓] The installation is complete."
+echo "→ Restart the terminal or run:source ~/.bashrc"

@@ -12,14 +12,14 @@ pub fn handle_args() {
             print_history();
         }
         [flag, index_str] if flag == FLAG_RUN => {
-            let index: usize = index_str.parse().expect("❗Неверный номер команды");
+            let index: usize = index_str.parse().expect("❗Invalid command number");
             run_command(index - 1);
         }
         [flag] if flag == FLAG_INTERACTIVE => {
             interactive_select();
         }
         _ => {
-            eprintln!("✨Использование: rh [-h | -r N | -i]");
+            eprintln!("✨Using: rh [-h | -r N | -i]");
         }
     }
 }

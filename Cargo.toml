@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [profile.release]
-opt-level = "z"  # Оптимизация для уменьшения размера
-lto = true       # Link Time Optimization (оптимизация на этапе линковки)
-codegen-units = 1  # Объединение единиц кода для улучшения оптимизации
+opt-level = "z"  # Optimization to reduce size
+lto = true       # Link Time Optimization 
+codegen-units = 1  # Combining code units to improve optimization
 
 [dependencies]
 dirs = "6.0.0"
