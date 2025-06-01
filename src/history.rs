@@ -94,7 +94,7 @@ pub fn interactive_select() {
                     return;
                 }
 
-                println!("🚀 Done: {}", cmd);
+                println!("🚀 Start: {}", cmd);
                 run_raw_command(cmd.trim());
             }
         }
