@@ -3,7 +3,7 @@ name: Build macOS Binary
 on:
   push:
     branches:
-      - macos-build   
+      - macos   
   workflow_dispatch:
 
 jobs:
