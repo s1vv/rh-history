@@ -124,6 +124,7 @@ Replays command #4 from the history.
 
 * Make sure `~/bin` is in your `$PATH`.
 * If you prefer another editor, edit `mcedit` to use it instead of `nano`.
+* If at startup install.sh an error occurs, try `chmod +x install.sh` in the terminal, the script becomes executable.
 
 ---
 
