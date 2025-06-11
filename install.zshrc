@@ -26,11 +26,9 @@ if ! grep -q '_log_command' "$RC_FILE"; then
     cat >> "$RC_FILE" <<'EOF'
 
 # rh history logging
-function _log_command() {
-    history -a
-    rh-log.sh "$(fc -ln -1)"
+function preexec() {
+    rh-log.sh "$1" > /dev/null 2>&1
 }
-precmd_functions+=(_log_command)
 EOF
 fi
 
@@ -55,11 +53,9 @@ if ! grep -q '_log_command' "$RC_FILE"; then
     cat >> "$RC_FILE" <<'EOT'
 
 # rh history logging
-function _log_command() {
-    history -a
-    rh-log.sh "$(fc -ln -1)"
+function preexec() {
+    rh-log.sh "$1" > /dev/null 2>&1
 }
-precmd_functions+=(_log_command)
 EOT
 fi
 EOF
