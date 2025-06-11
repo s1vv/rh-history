@@ -73,7 +73,7 @@ pub fn interactive_select() {
     let options = SkimOptionsBuilder::default()
         .height("40%".to_string())
         .multi(false)
-        .prompt("Выберите команду > ".to_string())
+        .prompt("Enter the command > ".to_string())
         .build()
         .unwrap();
 
